@@ -2,32 +2,35 @@ import React, { useContext } from 'react'
 import { Box, Stack, Text, useToast } from '@sanity/ui'
 
 import { TranslationContext } from './TranslationContext'
-import { TranslationLocale, TranslationTask } from '../types'
+import { TranslationTask } from '../types'
 import { LanguageStatus } from './LanguageStatus'
 
 type JobProps = {
-  task: TranslationTask
-  locales: TranslationLocale[]
+  tasks: TranslationTask[]
 }
 
-export const TaskView = ({ task, locales }: JobProps) => {
+export const TaskView = ({ tasks }: JobProps) => {
   const context = useContext(TranslationContext)
   const toast = useToast()
 
-  const importFile = (localeId: string) => {
+  const importFile = async (taskId: string, localeId: string) => {
     if (!context) {
       console.error('Missing context')
       return
     }
 
-    context.adapter
-      .getTranslation(task.taskId, localeId, context.secrets)
+    return context.adapter
+      .getTranslation(taskId, localeId, context.secrets)
       .then(record => {
         if (record) {
-          context.importTranslation(localeId, record)
+          return context.importTranslation(localeId, record)
         } else {
-          // TODO: Handle this in a toast
-          alert('Error getting the translated content!')
+          toast.push({
+            title: 'Error getting the translated content!',
+            status: 'warning',
+          })
+          return null
+          // alert('Error getting the translated content!')
         }
       })
   }
@@ -38,21 +41,39 @@ export const TaskView = ({ task, locales }: JobProps) => {
         Current job progress
       </Text>
       <Box>
-        {task.locales.map(localeTask => {
+        {tasks.map(({ taskId, localeId, description, progress }) => {
+          const reportPercent = progress || 0
+          // const locale = locales.find(l => l.localeId === localeTask.localeId)
+          return (
+            <LanguageStatus
+              key={[taskId, localeId].join('.')}
+              importFile={() => {
+                importFile(taskId, localeId).then(() => {
+                  toast.push({ title: 'Import successful ', status: 'success' })
+                })
+              }}
+              title={description || localeId}
+              progress={reportPercent}
+            />
+          )
+        })}
+        {/* {task.locales.map(localeTask => {
           const reportPercent = localeTask.progress || 0
           const locale = locales.find(l => l.localeId === localeTask.localeId)
           return (
             <LanguageStatus
               key={[task.taskId, localeTask.localeId].join('.')}
               importFile={() => {
-                importFile(localeTask.localeId)
-                toast.push({ title: 'Hello', status: 'info' })
+                importFile(localeTask.localeId).then(() => {
+                  toast.push({ title: 'Hello', status: 'info' })
+                })
+                
               }}
               title={locale?.description || localeTask.localeId}
               progress={reportPercent}
             />
           )
-        })}
+        })} */}
       </Box>
     </Stack>
   )

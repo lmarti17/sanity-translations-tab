@@ -1,7 +1,10 @@
 export type TranslationTask = {
   taskId: string
   documentId: string
-  locales: TranslationTaskLocaleStatus[]
+  description: string
+  localeId: string
+  progress: number
+  // locales: TranslationTaskLocaleStatus[]
 }
 
 export type TranslationLocale = {
@@ -27,7 +30,7 @@ export interface Adapter {
   getTranslationTask: (
     documentId: string,
     secrets: Secrets | null
-  ) => Promise<TranslationTask | null>
+  ) => Promise<TranslationTask[] | null>
   createTask: (
     documentId: string,
     document: Record<string, any>,

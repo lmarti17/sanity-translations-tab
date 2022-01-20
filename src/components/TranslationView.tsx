@@ -8,7 +8,7 @@ import { TranslationTask, TranslationLocale } from '../types'
 
 export const TranslationView = () => {
   const [locales, setLocales] = useState<TranslationLocale[]>([])
-  const [task, setTask] = useState<TranslationTask | null>(null)
+  const [tasks, setTask] = useState<TranslationTask[] | null>([])
 
   const context = useContext(TranslationContext)
 
@@ -35,7 +35,7 @@ export const TranslationView = () => {
   return (
     <Stack space={5}>
       <NewTask locales={locales} />
-      {task && <TaskView task={task} locales={locales} />}
+      {tasks && <TaskView tasks={tasks} />}
     </Stack>
   )
 }

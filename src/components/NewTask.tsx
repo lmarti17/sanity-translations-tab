@@ -1,7 +1,16 @@
 import React, { useState, useContext } from 'react'
 import { TranslationContext } from './TranslationContext'
 import { TranslationLocale } from '../types'
-import { Box, Grid, Flex, Stack, Text, Button, Switch } from '@sanity/ui'
+import {
+  Box,
+  Grid,
+  Flex,
+  Stack,
+  Text,
+  Button,
+  Switch,
+  useToast,
+} from '@sanity/ui'
 
 type Props = {
   locales: TranslationLocale[]
@@ -50,6 +59,7 @@ export const NewTask = ({ locales }: Props) => {
     React.ReactText[]
   >([])
   const [isBusy, setIsBusy] = useState(false)
+  const toast = useToast()
 
   const context = useContext(TranslationContext)
 
@@ -78,6 +88,10 @@ export const NewTask = ({ locales }: Props) => {
         )
       })
       .then(() => {
+        toast.push({
+          title: 'New task created successfully',
+          status: 'success',
+        })
         setIsBusy(false)
       })
   }
