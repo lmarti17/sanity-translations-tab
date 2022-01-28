@@ -36,7 +36,7 @@ export interface Adapter {
     document: Record<string, any>,
     localeIds: string[],
     secrets: Secrets | null
-  ) => Promise<TranslationTask>
+  ) => Promise<TranslationTask[]>
   getTranslation: (
     taskid: string,
     localeId: string,

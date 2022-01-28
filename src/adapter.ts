@@ -45,10 +45,10 @@ export const DummyAdapter: Adapter = {
   },
   getTranslationTask: async (documentId: string) => {
     console.debug('Fetching translation tasks for document', documentId)
-    return new Promise(resolve => {
+    return new Promise(() => {
       const tasks = getTasks()
       const result = tasks.length ? tasks[tasks.length - 1] : null
-      resolve(result)
+      return result
     })
   },
   createTask: async (
@@ -58,16 +58,19 @@ export const DummyAdapter: Adapter = {
   ) => {
     console.debug('Sending over serialized document', document)
     return new Promise(resolve => {
-      const task: TranslationTask = {
-        taskId: new Date().getTime().toString(),
-        documentId,
-        locales: localeIds.map(l => ({
-          localeId: l,
+      const tasks: TranslationTask[] = []
+      localeIds.forEach(locale => {
+        const task: TranslationTask = {
+          taskId: new Date().getTime().toString(),
+          documentId,
           progress: 80,
-        })),
-      }
-      addTask(task)
-      resolve(task)
+          localeId: locale,
+          description: 'Description',
+        }
+        addTask(task)
+        tasks.push(task)
+      })
+      resolve(tasks)
     })
   },
   getTranslation: async (taskId: string, localeId: string) => {

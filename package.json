@@ -21,7 +21,7 @@
     "analyze": "size-limit --why"
   },
   "peerDependencies": {
-    "@sanity/ui": "^0.36.8",
+    "@sanity/ui": "^0.37.2",
     "react": "^16 || ^17",
     "react-dom": "^16 || ^17",
     "styled-components": "^5"
