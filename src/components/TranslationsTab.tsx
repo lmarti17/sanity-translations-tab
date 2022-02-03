@@ -114,7 +114,7 @@ const TranslationTab = (props: TranslationTabProps) => {
     return (
       <ThemeProvider>
         <Box padding={4}>
-          <Layer zOffset={1000}>
+          <Layer zOffset={50000}>
             <ToastProvider>
               {hasErrors && (
                 <Stack space={3}>
